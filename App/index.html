@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.3/TweenMax.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .green-box {
+            height: 80%;
+            background: #70c26f;
+        }
+
+        .tile-container {
+            position: absolute;
+            top: 27px;
+            right: 0;
+            left: 0;
+            text-align: center;
+            user-select: none;
+        }
+
+        .tile {
+            width: 100px;
+            height: 100px;
+            margin: 4px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .page-container {
+            visibility: hidden;
+        }
+
+        .page {
+            cursor: pointer;
+            position: absolute;
+            height: 100vh;
+            width: 100vw;
+            top: 0;
+            left: 0;
+            position: fixed;
+        }
+
+        .area-1 {
+            background: #F4DB33;
+        }
+
+        .area-2 {
+            background: #972FF8;
+        }
+    </style>
+</head>
+<body>
+    <div class="green-box"></div>
+
+    <div class="tile-container">
+        <div class="tile area-1"></div>
+        <div class="tile area-2"></div>
+    </div>
+
+    <div class="page-container">
+        <div class="page area-1"></div>
+        <div class="page area-2"></div>
+    </div>
+
+    <script>
+        const root = document.documentElement;
+        const body = document.body;
+        const pages = document.querySelectorAll(".page");
+        const tiles = document.querySelectorAll(".tile");
+
+        //Bind listener
+        for (let i = 0; i < tiles.length; i++) {
+            const tile = tiles[i];
+            const page = pages[i];
+            tile.addEventListener("click", function() {
+                animateArea(tile, page);
+            });
+            page.addEventListener("click", function() {
+                animateArea(page, tile);
+            });
+        }
+
+        // Animate with TweenLite
+        const animateArea = (fromHero, toHero) => {
+            const clone = fromHero.cloneNode(true);
+            const from = calculatePosition(fromHero);
+            const to = calculatePosition(toHero);
+
+            TweenLite.set([fromHero, toHero], {
+                visibility: "hidden"
+            });
+            TweenLite.set(clone, {
+                position: "absolute",
+                margin: 0
+            });
+
+            body.appendChild(clone);
+
+            const style = {
+                x: to.left - from.left,
+                y: to.top - from.top,
+                width: to.width,
+                height: to.height,
+                autoRound: false,
+                ease: Power1.easeOut,
+                onComplete: () => {
+                    TweenLite.set(toHero, {
+                        visibility: "visible"
+                    });
+                    body.removeChild(clone);
+                }
+            };
+
+            TweenLite.set(clone, from);
+            TweenLite.to(clone, 0.3, style)
+        }
+
+        // Calculate the position
+        const calculatePosition = (element) => {
+            const rect = element.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || root.scrollTop || body.scrollTop || 0;
+            const scrollLeft = window.pageXOffset || root.scrollLeft || body.scrollLeft || 0;
+            const clientTop = root.clientTop || body.clientTop || 0;
+            const clientLeft = root.clientLeft || body.clientLeft || 0;
+            return {
+                top: Math.round(rect.top + scrollTop - clientTop),
+                left: Math.round(rect.left + scrollLeft - clientLeft),
+                height: rect.height,
+                width: rect.width,
+            };
+        }
+    </script>
+</body>
+</html>

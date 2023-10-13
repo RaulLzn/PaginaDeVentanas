@@ -1,0 +1,47 @@
+body {
+    height: 100%;
+  }
+  
+  .green-box {
+    height: 154px;
+    background: #70c26f;
+  }
+  
+  .tile-container {
+    position: absolute;
+    top: 27px;
+    right: 0;
+    left: 0;
+    text-align: center;
+    user-select: none;
+  }
+  
+  .tile {
+    width: 100px;
+    height: 100px;
+    margin: 4px;
+    cursor: pointer;
+    display: inline-block;
+  }
+  
+  .page-container {
+    visibility: hidden;
+  }
+  
+  .page {
+    cursor: pointer;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    position: fixed;
+  }
+  
+  .area-1 {
+    background: #F4DB33;
+  }
+  
+  .area-2 {
+    background: #972FF8;
+  }
